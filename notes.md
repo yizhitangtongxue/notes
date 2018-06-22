@@ -45,7 +45,7 @@ $product2 = new ShopProduct();
 var_dump($product1);
 var_dump($product2);
 ```
-7. 7-1 通过var_dump()，我们获得了它所包含的有用的信息，每个对象的内部标识符(#号后面的数字)。
+	7. 7-1 通过var_dump()，我们获得了它所包含的有用的信息，每个对象的内部标识符(#号后面的数字)。
 ```php
 object(ShopProduct) #1 (0) {
 
@@ -54,7 +54,7 @@ object(ShopProduct) #2 (0) {
 	
 }
 ```
-7. 7-2 如果你开启了xdebug扩展，那么应该显示成这样：
+	7. 7-2 如果你开启了xdebug扩展，那么应该显示成这样：
 ```php
 // D:\Wamp64\www\oop\1.php:8:
 object(ShopProduct)[1]
