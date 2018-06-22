@@ -213,4 +213,41 @@ is_string()  | 字符串  | 字符数据
 is_object()  | 对象    | 对象
 is_array()   | 数组    | 数组
 is_resource()| 资源    | 用于识别和处理外部资源(如数据库或文件)的句柄
-is_null()    | NULL    | 未分配的值 
+is_null()    | NULL    | 未分配的值
+
+2. 也可以用var_dump()*查询*数据类型。一般来说，上面的代码是配合if语句用来*检测*某个数据是否存在或匹配而使用的。
+
+#### 获得提示：对象类型
+
+1. 正如参数变量可以包含任何基本类型的数据，参数默认情况下也可以包含任何类型的对象。
+
+2. 假设有一个设计为*接收ShopProduct对象*的方法。例子：
+```php
+class ShopProduct {
+	public $title;
+	public $price = 5;
+	//构造函数，设置初始值。
+	public function __construct($myTitle,$myPrice) {
+		$this->title = $myTitle;
+		$this->price = $myPrice;
+	}
+
+	public function getProduct() {
+		return "{$this->title}";
+	}
+}
+
+class ShopProductWriter {
+	// 现在write方法只接收包含类名为ShopProduct对象的$ShopProduct参数
+	public function write (ShopProduct $ShopProduct) {
+		$str = "{$ShopProduct->title}: ".
+			   $ShopProduct->getProduct().
+			   "({$ShopProduct->price})\n";
+		print $str;
+	}
+}
+// 构造函数在使用new操作符生成对象时自动调用
+$product1 = new ShopProduct('myTitle',5);
+$write = new ShopProductWriter();
+$write->write($product1);
+```
