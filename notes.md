@@ -69,3 +69,46 @@ object(ShopProduct)[2]
 9. >在PHP4和PHP5(直到PHP版本5.1)中，直接输出一个对象，得到的是包含对象ID的字符串。从PHP5.2开始，PHP不再支持这个功能，把对象当作字符串处理将会出错，除非在对象的类中定义了__toString()方法。
 
 ### 特定的数据字段-属性
+
+1. 属性被成为成员变量，可以用来存放对象之间互不相同的数据。
+
+2. 类的属性和标准的变量很相似，不过必须在申明属性和赋值前加一个代表可见性的关键词(keyword)，关键词可以是public、protected、private，它决定了属性的作用域。
+
+3. 设置类中的属性，例子：
+```php
+class ShopProduct {
+	public $title = "default product";
+	//设置了属性的可见性为public，确保我们可以在对象之外访问属性。
+	//属性的名称为$title。
+	//属性的初始值为default product。
+	//实例化类得到的任何对象都将加载默认数据。
+}
+```
+
+4. >可见性关键字public、protected、private是在PHP5中引入的。如果在PHP4下将无法正常运行。在PHP4中所有的属性都用var关键字申明，效果等同与public。考虑到向后兼容，PHP5中保留了对var的支持，但会自动将var转换为public。
+
+5. 我们可以使用->字符连接对象变量和属性名称，来访问属性变量。例子：
+```php
+$product1 = new ShopProduct();
+
+echo $product1->title;
+// 上面的代码将输出属性$title的值，即default product;
+```
+
+6. public关键字使得我们可以给属性赋值(也可以读取属性)，来替换类中设置的默认值。
+```php
+$product1 = new ShopProduct();
+$product2 = new ShopProduct();
+
+$product1->title = "My Antonia";
+
+echo $product1->title;
+echo $product2->title;
+//product2的title属性值并没有被改变，因为product1和product2是两个相同类型的不同对象。
+```
+
+7. >调用类、函数或者方法的代码通常被称为该类、函数或者方法的客户端(client)或者客户端代码(client code)。
+
+8. 使用方法，我们可以让对象可以在内部有处理属性数据的能力，减少动态设置属性出现的问题等等。
+
+9. 在对象外部动态的给对象的属性赋值并不是一个良好的做法，最好使用方法来代替这些操作。
