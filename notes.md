@@ -85,7 +85,7 @@ class ShopProduct {
 }
 ```
 
-4. >可见性关键字public、protected、private是在PHP5中引入的。如果在PHP4下将无法正常运行。在PHP4中所有的属性都用var关键字申明，效果等同与public。考虑到向后兼容，PHP5中保留了对var的支持，但会自动将var转换为public。
+4. >可见性关键字public、protected、private是在PHP5中引入的。如果在PHP4下将无法正常运行。在PHP4中所有的属性都用var关键字申明，效果等同于public。考虑到向后兼容，PHP5中保留了对var的支持，但会自动将var转换为public。
 
 5. 我们可以使用->字符连接对象变量和属性名称，来访问属性变量。例子：
 ```php
@@ -112,3 +112,83 @@ echo $product2->title;
 8. 使用方法，我们可以让对象可以在内部有处理属性数据的能力，减少动态设置属性出现的问题等等。
 
 9. 在对象外部动态的给对象的属性赋值并不是一个良好的做法，最好使用方法来代替这些操作。
+
+### 使用方法
+
+1. 属性可以让对象存储数据，类方法则可以让对象执行任务。方法是在类中申明的特殊函数。申明方法类似与函数申明。function关键字在方法名之前，方法名之后圆括号中的是可选的参数列表。方法体用大括号括起来。例子：
+```php
+class ShopProduct {
+	public function myMethod($argument,$another) {
+		//...方法体
+	}
+}
+```
+
+2. 与函数不同，方法必须在类中申明，方法也可以使用可见性关键字public、protected、private。如果在方法申明中省略了可见性关键字，那么方法的可见性关键字将被隐性的申明为public，即可以在对象之外调用此方法。
+
+3. >PHP4不能识别方法或属性的可见性关键字。增在可见性关键字将会报错。在PHP4中所有的方法都是public类型的。
+
+4. 在大多数情况下，我们可以使用->连接对象变量和方法名来调用方法。调用方法必须使用一对圆括号，即使没有传递任何参数给方法，类似于函数调用。例子：
+```php
+class ShopProduct {
+	public $title 			   = 'default product';
+	public $producterMainName  = 'main name';
+	public $producterFirstName = 'first name';
+	public $price			   = 0;
+
+	public function getProducter() {
+		return "{$this->producterFirstName}"."{$this->producterMainName}";
+	}
+}
+
+$product = new ShopProduct();
+
+// print $product->producterFirstName;
+print "author：{$product->getProducter()} \n";
+```
+
+5. 在上述代码中，我们使用了一个新特性$this伪变量，$this把类指向一个对象实例。可以这样理解。尝试用“当前实例”替换$this：
+```php
+	$this->producterFirstName
+// 理解为
+	// 当前实例的$producterFirstName属性
+```
+6. 使用了方法，还是无法避免需要做大量重复性的工作，我们无法保证在初始化对象时每个属性都被设置。因此我们需要一个当类实例化对象时可以被自动调用的类方法，即构造函数/构造方法。
+
+#### 使用构造函数/构造方法
+
+1. 当使用new操作符创建对象时，\_construct()\构造函数将被自动调用。构造函数可以用来确保必要的属性被设置，并且完成任何需要准备的工作。
+
+2. >在PHP5之前的版本中，构造函数使用和所在类相同的名字，因此Shop类可以使用Shop()函数作为它的构造函数。在PHP5中，虽然这种方式依然有效，但应该将构造函数命名为__construct()，注意是两个下划线开头。以后我们看到的PHP类中其他许多特殊的方法也用两个下划线开头。
+
+3. 构造函数命名为__construct()。例子：
+```php
+class ShopProduct {
+	public $title;
+	public $producterMainName;
+	public $producterFirstName;
+	public $price = 0;
+
+	function __construct($title,$firstName,$mainName,$price) {
+		$this->title 				= $title;
+		$this->producterFirstName 	= $firstName;
+		$this->producterMainName    = $mainName;
+		$this->$price               = $price;
+	}
+
+	function getProducter() {
+		return "{$this->producterFirstName} ".
+			   "{$this->producterMainName}";
+	}
+}
+// 当使用new操作符创建对象时，_construct()构造函数将被自动调用。
+$product = new ShopProduct("My Antonia","Willa","Cather",5.99);
+// 使用->连接对象变量和方法名来调用方法。
+print "author：{$product->getProducter()}";
+```
+
+4. 构造函数使用伪变量$this给对象的每个属性赋值。$this把类指向一个对象实例。
+
+5. >PHP4不会把__construct()方法当作构造函数/构造方法。
+
+#### 参数和类型
