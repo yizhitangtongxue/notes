@@ -226,7 +226,7 @@ is_null()    | NULL    | 未分配的值
 class ShopProduct {
 	public $title;
 	public $price = 5;
-	//构造函数，设置初始值。
+	// 构造函数，设置初始值。
 	public function __construct($myTitle,$myPrice) {
 		$this->title = $myTitle;
 		$this->price = $myPrice;
@@ -250,4 +250,46 @@ class ShopProductWriter {
 $product1 = new ShopProduct('myTitle',5);
 $write = new ShopProductWriter();
 $write->write($product1);
+// 在这个例子中，大小写貌似是不受限制的。
 ```
+2. 2-1 如果传入了的参数为*错误的类名所实例化的对象*，则报错：
+```php
+// Catchable fatal error: Argument 1 passed to ShopProductWriter::write() must be an instance of ShopProduct, null given, called in D:\Wamp64\www\oop\1.php on 
+// line 28 and defined in D:\Wamp64\www\oop\1.php on line 18
+```
+
+#### 继承extends
+
+1. 继承是从一个基类得到一个或者多个派生类的机制。
+
+2. 继承自另一个类的类被称为该类(父类或者说是超类)的子类。这种关系通常用父亲和孩子来比喻。
+
+3. 子类将继承父类的特性，这些特性由属性和方法组成。子类可以增加父类(也称为超类，superclass)之外的新功能，因此子类也被称为父类的“扩展”。
+
+4. instanceof操作符可以与if语句配合，判断一个对象是否是一个类的实例化。
+
+5. 继承可以解决代码重复性。继承能为每种类型提供一个单独的功能，同时希望提供公共的功能来避免重复，又允许每种类型处理不同的方法调用。这正是我们使用继承的原因。
+
+#### 使用继承
+
+1. >创建继承书的第一步是找到现有基类元素中不适合放在一起，或者不需要进行特殊处理的类方法。
+
+2. 子类默认继承父类所有的public和protecetd方法或属性。
+
+3. 子类是无法继承private方法或者属性的。
+
+4. 子类继承父类的构造函数时，若属性中已经有了默认值，在使用new操作符创建对象时，可以不加这个属性，不会报错。
+
+#### 构造方法和继承
+
+1. >要调用父类的方法，首先要找到一个引用类本身的途径，句柄(handle)。PHP为此提供了parent关键字。
+
+2. >要引用一个类而不是对象的方法，可以使用::而不是->。例子：
+```php
+	function __construct($title,$firstName,$mainName,$price,$numPages) {
+		parent::__construct($title,$firstName,$mainName,$price);
+		$this->numPages = $numPages;
+	}
+```
+
+3. 每个子类都会在设置自己的属性前调用父类的构造方法。基类现在仅知道自己的数据。子类一般是父类的特例。我们应该避免告诉父类任何关于子类的信息，这是一条经验规则。
