@@ -15,7 +15,7 @@
 6. PHP6建立在全新的ZendEngine3基础上，提供了Unicode的内在支持，使得PHP更好的支持国际化，有一个被规划在PHP6中的特性，已经在PHP5.3中支持，那就是命名空间，通过命名空间，你就可以在不同的类中，使用相同名称的类，而不会产生冲突。提示返回类型的特性也被规划在PHP6中，这样你就可以在函数的申明中申明它所返回的对象类型了。当然PHP6因为种种原因最终也没有发布。
 
 7. PHP7在性能发面得到了极大的提升，PHP7大概有PHP5.X的两倍的性能。
->后来鸟哥加入到了PHP核心开发项目，鸟哥发起了PHP解释引擎重构的项目，叫做PHPNG，大家可以参考这篇[wiki](https://wiki.php.net/phpng),PHPNG项目主要是对PHP的引擎进行重构，很快鸟哥的项目组取得了非凡的成就，获得了PHP开发社区的的认可，合并到了PHP的主干，也就是我们现在说的PHP7版本。
+>后来鸟哥加入到了PHP核心开发项目，鸟哥发起了PHP解释引擎重构的项目，叫做PHPNG，大家可以参考这篇[Wiki](https://wiki.php.net/phpng),PHPNG项目主要是对PHP的引擎进行重构，很快鸟哥的项目组取得了非凡的成就，获得了PHP开发社区的的认可，合并到了PHP的主干，也就是我们现在说的PHP7版本。
 
 ## 对象基础
 
@@ -40,8 +40,26 @@ $product1 = new ShopProduct();
 $product2 = new ShopProduct();
 ```
 
-7. 在PHP脚本中创建的每个对象也有唯一的身份，PHP会在一个进程中重复使用这些身份(或标识符，identifier)来访问这些对象，可以通过vardump()输出对象来证明这一点。
+7. 在PHP脚本中创建的每个对象也有唯一的身份，PHP会在一个进程中重复使用这些身份(或标识符，identifier)来访问这些对象，可以通过vardump()输出对象来证明这一点，通过vardump，我们获得了它所包含的有用的信息，每个对象的内部标识符(#号后面的数字)。
+```
+var_dump($product1);
+var_dump($product2);
+```
+```
+object(ShopProduct) #1 (0) {
 
+}
+object(ShopProduct) #2 (0) {
+	
+}
+```
+```
+如果你开启了xdebug扩展，那么应该显示成这样
+D:\Wamp64\www\oop\1.php:8:
+object(ShopProduct)[1]
+D:\Wamp64\www\oop\1.php:9:
+object(ShopProduct)[2]
+```
 8. object是对象数据类型，好比int是整型，bool是布尔型。
 
 9. >在PHP4和PHP5(直到PHP版本5.1)中，直接输出一个对象，得到的是包含对象ID的字符串。从PHP5.2开始，PHP不再支持这个功能，把对象当作字符串处理将会出错，除非在对象的类中定义了__toString()方法。
