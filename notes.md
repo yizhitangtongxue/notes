@@ -57,8 +57,8 @@ object(ShopProduct) #2 (0) {
 // 如果你开启了xdebug扩展，那么应该显示成这样
 // D:\Wamp64\www\oop\1.php:8:
 object(ShopProduct)[1]
-D:\Wamp64\www\oop\1.php:9:
-// object(ShopProduct)[2]
+// D:\Wamp64\www\oop\1.php:9:
+object(ShopProduct)[2]
 ```
 8. object是对象数据类型，好比int是整型，bool是布尔型。
 
