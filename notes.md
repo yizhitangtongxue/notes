@@ -147,7 +147,7 @@ $product = new ShopProduct();
 print "author：{$product->getProducter()} \n";
 ```
 
-5. 在上述代码中，我们使用了一个新特性$this伪变量，$this把类指向一个对象实例。可以这样理解。尝试用“当前实例”替换$this：
+5. 在上述代码中，我们使用了一个新特性$this伪变量，$this把类指向一个对象实例。可以这样理解。尝试用“当前实例”替换$this。例子：
 ```php
 	$this->producterFirstName
 // 理解为
