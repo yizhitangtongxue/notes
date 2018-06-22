@@ -26,7 +26,7 @@
 3. 和一个类关联的代码必须用大括号括起来。
 
 4. 创建类的例子：
-```
+```php
 class ShopProduct {
 	//类体
 }
@@ -35,17 +35,17 @@ class ShopProduct {
 5. 如果说类是生成对象的模板，那么对象就是根据类中定义的模板所构造的数据。对象可以被说成是类的实例化，它是由类定义的数据类型。
 
 6. new操作符和类名加小括号一起使用，就会生成一个对象。我们使用ShopProduct类作为生成两个ShopProduct对象的模板。虽然功能一样，但是它们都是由同一个类生成的相同类型的不同对象。创建对象的例子：
-```
+```php
 $product1 = new ShopProduct();
 $product2 = new ShopProduct();
 ```
 
 7. 在PHP脚本中创建的每个对象也有唯一的身份，PHP会在一个进程中重复使用这些身份(或标识符，identifier)来访问这些对象，可以通过vardump()输出对象来证明这一点，通过vardump，我们获得了它所包含的有用的信息，每个对象的内部标识符(#号后面的数字)。
-```
+```php
 var_dump($product1);
 var_dump($product2);
 ```
-```
+```php
 object(ShopProduct) #1 (0) {
 
 }
@@ -53,12 +53,12 @@ object(ShopProduct) #2 (0) {
 	
 }
 ```
-```
-如果你开启了xdebug扩展，那么应该显示成这样
-D:\Wamp64\www\oop\1.php:8:
+```php
+// 如果你开启了xdebug扩展，那么应该显示成这样
+// D:\Wamp64\www\oop\1.php:8:
 object(ShopProduct)[1]
 D:\Wamp64\www\oop\1.php:9:
-object(ShopProduct)[2]
+// object(ShopProduct)[2]
 ```
 8. object是对象数据类型，好比int是整型，bool是布尔型。
 
