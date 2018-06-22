@@ -40,11 +40,12 @@ $product1 = new ShopProduct();
 $product2 = new ShopProduct();
 ```
 
-7. 在PHP脚本中创建的每个对象也有唯一的身份，PHP会在一个进程中重复使用这些身份(或标识符，identifier)来访问这些对象，可以通过vardump()输出对象来证明这一点，通过vardump，我们获得了它所包含的有用的信息，每个对象的内部标识符(#号后面的数字)。
+7. 在PHP脚本中创建的每个对象也有唯一的身份，PHP会在一个进程中重复使用这些身份(或标识符，identifier)来访问这些对象，可以通过var_dump()输出对象来证明这一点。
 ```php
 var_dump($product1);
 var_dump($product2);
 ```
+7. 7-1 通过var_dump()，我们获得了它所包含的有用的信息，每个对象的内部标识符(#号后面的数字)。
 ```php
 object(ShopProduct) #1 (0) {
 
@@ -53,13 +54,14 @@ object(ShopProduct) #2 (0) {
 	
 }
 ```
+7. 7-2 如果你开启了xdebug扩展，那么应该显示成这样：
 ```php
-// 如果你开启了xdebug扩展，那么应该显示成这样
 // D:\Wamp64\www\oop\1.php:8:
 object(ShopProduct)[1]
 // D:\Wamp64\www\oop\1.php:9:
 object(ShopProduct)[2]
 ```
+
 8. object是对象数据类型，好比int是整型，bool是布尔型。
 
 9. >在PHP4和PHP5(直到PHP版本5.1)中，直接输出一个对象，得到的是包含对象ID的字符串。从PHP5.2开始，PHP不再支持这个功能，把对象当作字符串处理将会出错，除非在对象的类中定义了__toString()方法。
