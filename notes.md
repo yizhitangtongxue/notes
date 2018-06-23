@@ -377,7 +377,7 @@ print ShopProduct::AVAILABLE;
 
 3. 使用abstract关键字定义个抽象类。
 
-4. 抽象方法用abstract关键字申明，*其中不能有具体内容*，要以分号结尾而不是方法体。例子：
+4. 抽象方法用abstract关键字申明，**其中不能有具体内容**，要以分号结尾而不是方法体。例子：
 ```php
 // 创建一个抽象类。
 abstract class ShopProductWriter {
