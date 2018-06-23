@@ -368,3 +368,49 @@ print ShopProduct::AVAILABLE;
 5. 给已经申明过的常量赋值会引起解析错误。
 
 6. 当需要在类的所有实例中都能访问某个属性，并且属性值无需改变时，应该使用常量。
+
+### 抽象类
+
+1. >引入抽象类(abstract class)是PHP5的一个主要变化。这个新特性正是PHP朝面向对象设计发展的另一个标志。
+
+2. >抽象类不能被直接实例化。抽象类中只定义或部分实现子类需要的方法。子类可以继承它并且通过它实现其中的抽象方法，使抽象类具体化。
+
+3. 使用abstract关键字定义个抽象类。
+
+4. 抽象方法用abstract关键字申明，*其中不能有具体内容*，要以分号结尾而不是方法体。例子：
+```php
+// 创建一个抽象类。
+abstract class ShopProductWriter {
+	protected $products = array();
+
+	public function addProduct(ShopProduct $shopProduct) {
+		$this->products[]=$shopProduct;
+	}
+	// 申明抽象方法write()，以分号结束，并且其中不能有具体内容。
+	abstract public function write();
+}
+```
+
+5. **创建抽象方法后，要确保所有子类中都必须实现了该方法，但实现的细节可以先不确定。**
+
+6. >抽象类的每个子类都必须实现抽象类中的所有抽象方法，或者把它们自己也申明为抽象方法。扩展类不仅仅负责简单实现抽象类中的方法，**还必须重新申明方法。**
+
+7. >新的实现方法的访问控制不能比抽象方法的访问控制更严格。新的实现方法的参数个数应该和抽象方法的**参数个数一样**。例子：
+```php
+	// 创建一个抽象类。
+abstract class ShopProductWriter {
+
+	// 申明抽象方法write()，以分号结束，并且其中不能有具体内容。
+	abstract public function write();
+}
+
+class abstractProduct extends ShopProductWriter {
+	public function write() {
+	// 方法体
+	}
+}
+```
+
+8. 在PHP5中，抽象类在被解析时就被检测，所以更加安全。
+
+### 接口
