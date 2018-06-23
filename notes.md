@@ -379,13 +379,9 @@ print ShopProduct::AVAILABLE;
 
 4. 抽象方法用abstract关键字申明，**其中不能有具体内容**，要以分号结尾而不是方法体。例子：
 ```php
-// 创建一个抽象类。
+	// 创建一个抽象类。
 abstract class ShopProductWriter {
-	protected $products = array();
 
-	public function addProduct(ShopProduct $shopProduct) {
-		$this->products[]=$shopProduct;
-	}
 	// 申明抽象方法write()，以分号结束，并且其中不能有具体内容。
 	abstract public function write();
 }
@@ -405,6 +401,7 @@ abstract class ShopProductWriter {
 }
 
 class abstractProduct extends ShopProductWriter {
+	// 抽象类的每个子类都必须实现抽象类中的所有抽象方法
 	public function write() {
 	// 方法体
 	}
