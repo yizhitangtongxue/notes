@@ -410,4 +410,48 @@ class abstractProduct extends ShopProductWriter {
 
 8. 在PHP5中，抽象类在被解析时就被检测，所以更加安全。
 
+9. 抽象类中可以定义属性和方法。
+
 ### 接口
+
+1. 抽象类提供了具体实现的标准，而接口(interface)则是纯粹的模板。**接口只能定义功能，而不包含实现的内容**。
+
+2. 接口可以用关键字interface来申明。**接口可以包含属性和方法申明，但是方法体为空。**例子：
+```php
+interface Chargeable {
+	public function getPrice();
+}
+```
+
+3. 任何实现接口的类都要实现接口中所定义的所有方法，否则该类必须申明为abstract。
+
+4. 一个类可以在申明中使用implements关键字来实现某个接口。例子：
+```php
+interface Chargeable {
+	public function getPrice();
+}
+
+class ShopProduct implements Chargeable {
+	public function getPrice() {
+	}
+}
+```
+
+5. >PHP只支持继承一个父类，因此extends关键字只能在一个类名之前。
+
+6. >一个类可以同时继承一个父类夫实现N个接口。extends子句应该在implements子句之前。例子：
+```php
+class test extends A implements book,cd {
+	// ...
+}
+```
+
+7. 接口可以将需要的方法关联起来。
+
+8. 接口只能继承接口，不能继承类。不然会提示it is not an interface。
+
+9. 类可以同时继承一个类和实现多个接口。
+
+10. 抽象类是一个具体实现的约束标准，而接口是定义功能的模板。
+
+### 静态延迟绑定：static关键字
