@@ -410,7 +410,7 @@ class abstractProduct extends ShopProductWriter {
 
 8. 在PHP5中，抽象类在被解析时就被检测，所以更加安全。
 
-9. 抽象类中可以定义属性和方法。
+9. 抽象类中可以定义属性和方法，可以包含静态方法，静态方法可以有方法体，而抽象方法不能有方法体，且需要以分号结束。
 
 ### 接口
 
@@ -455,3 +455,158 @@ class test extends A implements book,cd {
 10. 抽象类是一个具体实现的约束标准，而接口是定义功能的模板。
 
 ### 静态延迟绑定：static关键字
+
+1. 工厂方法是生成包含类的实例的一种方法。
+
+2. 调用create()方法，即可将本类实例化。例子：
+```php
+abstract class DomainObject {
+	public static function create() {
+		return new static();
+	}
+}
+
+
+
+
+class User extends DomainObject {}
+```
+
+3. 使用static::方法调用一个方法的时候，被调用的方法必须是静态的。
+
+4. static::可以作为调用**静态方法**的标识符。例子：
+```php
+abstract class DomainObject {
+	private $group;
+	public function __construct() {
+		$this->group = static::getGroup();
+	}
+
+	public static function create() {
+		return new static();
+	}
+
+	public function getGroup() {
+		return "default";
+	}
+}
+
+class User extends DomainObject {
+
+}
+```
+
+### 异常
+
+1. >PHP5中引入了异常(exception)。异常是从PHP5内置的Exception类(或子类)实例化得到的特殊对象。Exception类型的对象用于存放和报告错误信息。
+
+2. Exception类的构造方法接受两个可选的参数：消息字符串和错误代码。
+
+3. Exception类提供了一些游泳的方法来分析错误条件。Exception类的public方法：
+方法  | 类型
+---- | -----
+getMessage() | 获得传递给结构方法的消息字符串
+getCode()    | 获得传递给构造方法的错误代码
+getFile()    | 获得产生异常的文件
+getLine()    | 获得产生异常的行号
+getPrevious  | 获得一个嵌套的异常对象
+getTrace()   | 获得一个多维数组，这个数组追踪导致异常的方法调用，包含方法、类、文件和参数数据
+getTraceAsString() | 获得getTrace()返回数据的字符串版本
+\_\_toString()     | 在字符串中使用Exception对象时自动调用。返回一个描述异常细节的字符串
+
+#### Try、throw 和 catch
+
+1. 适当的处理异常代码应该包括：
+Throw - 里规定如何触发异常。每一个 "throw" 必须对应至少一个 "catch"。
+Try - 使用异常的函数应该位于 "try" 代码块内。如果没有触发异常，则代码将照常继续执行。但是如果异常被触发，会抛出一个异常。
+Catch - "catch" 代码块会捕获异常，并创建一个包含异常信息的对象。
+
+```php
+// 创建一个有异常处理的函数
+function checkNum($number)
+{
+    if($number>1)
+    {
+        throw new Exception("变量值必须小于等于 1");
+    }
+        return true;
+}
+// 在 try 块 触发异常
+try
+{
+    checkNum(2);
+    // 如果抛出异常，以下文本不会输出
+    echo '如果输出该内容，说明 $number 变量';
+}
+// 捕获异常
+catch(Exception $e)
+{
+    echo 'Message: ' .$e->getMessage();
+}
+```
+
+### 更多的PHP异常处理可以参考[此处](http://www.runoob.com/php/php-exception.html)
+
+1. 简单的来说，就是先检测异常throw，再触发异常try，再捕捉异常catch，抛出错误。
+
+### Final类和方法
+
+1. final关键字只能被用于类和方法。
+
+2. final关键字可以终止类的继承。final类不能有子类，final方法不能被覆写。例子：
+```php
+final class A {
+
+}
+
+class B extends A {
+
+}
+
+// 报错 Fatal error: Class B may not inherit from final class (A) in D:\Wamp64\www\oop\8.php on line 9
+```
+
+3. 如果只是再A类中申明某个方法为final，而不是将整个类申明为final，那么继承A类就不会出现致命错误。例子：
+```php
+class A {
+	final function totalize() {
+		
+	}
+}
+
+class B extends A {
+
+}
+// 不会报错
+```
+```php
+class A {
+	final function totalize() {
+
+	}
+}
+
+class B extends A {
+	// 覆写final方法会导致报错
+	function totalize() {
+		
+	}
+}
+// 报错Fatal error: Cannot override final method A::totalize() in D:\Wamp64\www\oop\8.php on line 13
+```
+4. 如果申明了一个final的属性。就会报错，并说明final只能用于申明类和方法。例子：
+```php
+class A {
+	final $a;
+}
+
+class B extends A {
+
+	}
+}
+// 报错Fatal error: Cannot declare property A::$a final, the final modifier is allowed only for methods and classes
+```
+
+5. final关键字应该放在其他修饰词之前(如protected或者static)。
+
+6. 当程序已经发布之后，请谨慎使用final。
