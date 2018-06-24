@@ -610,3 +610,113 @@ class B extends A {
 5. final关键字应该放在其他修饰词之前(如protected或者static)。
 
 6. 当程序已经发布之后，请谨慎使用final。
+
+### 使用拦截器
+
+1. 拦截器(interceptor)可以拦截发送到*未定义方法和属性*的消息。也被称为重载(overloading)。
+
+2. \_\_get()和\_\_set()方法用于处理类(或者父类)中**未申明的属性**。
+
+3. \_\_get()方法。**当客户端代码试图访问未申明的属性时，__get方法会被自动调用。**例子：
+```php
+class Person {
+	// 设置了俩私有属性
+	private $name;
+	private $age;
+	// 当客户端代码试图访问未申明的属性时，__get方法会被自动调用。
+	function __get($property) {
+		return '您访问的属性未被申明';
+	}
+}
+$Person = new Person();
+// sex属性是不存在的，所以会提示'您访问的属性未被申明'
+print $Person->sex;
+```
+
+4. \_\_isset()方法。**当客户端代码试图对一个未申明的属性调用isset()方法时，__isset方法会被自动调用**例子：
+```php
+class Person {
+	// 设置了俩私有属性
+	private $name;
+	private $age;
+	// 当客户端代码试图对一个未申明的属性调用isset()方法时，__isset方法会被自动调用
+	function __isset($property) {
+		print '你正在对一个未申明的属性调用isset()方法！';
+	}
+}
+$Person = new Person();
+
+// 此时调用isset()方法，传入的属性并未被申明，所以会报错
+if(isset($Person->sex)) {
+
+}
+```
+
+5. \_\_set()方法。**在客户端代码试图给未申明的属性赋值时被调用。**例子：
+```php
+class Person {
+	// 设置了俩私有属性
+	private $name;
+	private $age;
+
+	function __set($property,$value) {
+		print '你正在对一个未申明的属性赋值！';
+	}
+
+	function setUnknow() {
+		// $this代表当前对象
+		// sex是一个未申明的属性
+		// $this->sex的意思是，当前对象下未申明的sex属性
+		$this->sex = '女';
+		// sex代表了$property，女代表了$value
+	}
+}
+$Person = new Person();
+
+$Person->setUnknow();
+// 调用setUnKnow方法对sex(未申明的属性)进行赋值。会提示'你正在对一个未申明的属性赋值！'
+}
+```
+
+6. \_\_unset()方法。**当客户端代码试图对一个未申明的属性调用unset()方法时**，\_\_unset()方法会被调用。例子：
+```php
+class Person {
+	// 设置了俩私有属性
+	private $name;
+	private $age;
+
+	function __unset($property) {
+		print '你正在对一个未申明的属性使用unset()方法!';
+	}
+
+	function getUnSet($property) {
+		unset($this->$property);
+	}
+}
+
+$Person = new Person();
+// getUnSet方法接收一个属性参数。sex属性未被申明，所以会报错'你正在对一个未申明的属性使用unset()方法!'
+$Person->getUnSet('sex');
+```
+
+7. \_\_call()方法可能是最有用的拦截器方法。**当客户端代码要调用类中未定义的方法时，\_\_call()方法会被调用。**例子：
+```php
+	// 第一个参数方法名在调用未申明的方法时，未申明的方法就是方法名，所以第一个参数不用填。
+	// 第二个参数是方法需要接收的所有参数。
+	function __call($method,$args) {
+		// 参数是一个一维数组，所以需要用逗号来分割数组，生成一个字符串，这样才能被打印。
+		print '方法名：'.$method.'<br>参数名：'.implode(', ', $args);
+	}
+}
+$Person = new Person();
+// 因为调用了一个不存在的(未申明的)方法，触发并调用了__call()方法。所以报错：
+// 方法名：getMethod
+// 参数名：aaa
+$Person->getMethod('aaa');
+```
+
+8. \_\_call()方法还有更强大的用处，比如**实现委托**。*太高级还玩不来。*
+
+9. **method_exists()函数接受对象和方法名作为参数。检查方法在对象中是否存在**。
+
+### 析构方法
