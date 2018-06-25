@@ -720,3 +720,139 @@ $Person->getMethod('aaa');
 9. **method_exists()函数接受对象和方法名作为参数。检查方法在对象中是否存在**。
 
 ### 析构方法
+
+1. 在实例化对象时，\_\_construct()方法会被自动调用。PHP5也提供了一个对应大的方法\_\_destruct()。
+
+2. \_\_destruct()方法只在对象被垃圾收集器收集前(即对象从内存中删除之前)自动调用。
+
+3. 你可以利用这个方法进行最后必要的清理工作。
+
+4. 销毁Person对象。例子：
+```php
+function __destruct() {
+	//....
+}
+```
+
+5. 调用unset函数应该会触发析构方法。
+
+### \_\_clone()复制对象
+
+1. **在PHP中，对象的赋值和传递都是通过引用进行的。**
+
+2. 在一个对象上调用clone关键字时，其\_\_clone()方法就会被自动调用。
+
+3. 可以通过\_\_clone()方法控制复制什么。例子：
+```php
+class Person {
+	private $name;
+	private $age;
+	private $id;
+	private $infomation = Array();
+	public $account;
+
+	function __construct($name,$age, Account $account) {
+		$this->name = $name;
+		$this->age = $age;
+		$this->account = $account;
+	}
+
+	function setId($id) {
+		$this->id = $id;
+	}
+	//当客户端调用clone关键字时，此方法会被自动调用
+	//并设置id为0，防止两个不同对象指向数据库中的同一数据
+	function __clone() {
+		$this->id = 0;
+		// 显式地在\_\_clone()方法中复制指定的对象
+		$this->account = clone $this->account;
+	}
+
+	function getInformation() {
+		$this->infomation = ['id'=>$this->id,'name'=>$this->name,'age'=>$this->age,'account'=>$this->account];
+		return $this->infomation;
+	}
+}
+
+class Account {
+	public $balance;
+	function __construct($balance) {
+		$this->balance = $balance;
+	}
+}
+
+
+$person = new Person('Bob',44,new Account(200));
+$person->setId(343);
+var_dump($person->getInformation());
+// 结果
+// D:\Wamp64\www\oop\9.php:30:
+// array (size=3)
+//  'id' => int 343
+//  'name' => string 'Bob' (length=3)
+//  'age' => int 44
+
+
+
+// 使用clone关键字复制对象，此时会自动调用__clone()方法。产生一个新副本：对象$person2，并将id设置为0
+$person2 = clone $person;
+var_dump($person2->getInformation());
+
+//D:\Wamp64\www\oop\9.php:34:
+// array (size=3)
+//  'id' => int 0
+//  'name' => string 'Bob' (length=3)
+//  'age' => int 44
+//  
+//  
+// 给person增加余额，此时已经在__clone()方法中改变了复制的新副本获得值的方式，现在已经不会与原对象共享数据了
+$person->account->balance +=10;
+// 测试
+var_dump($person->getInformation());
+var_dump($person2->getInformation());
+
+
+```
+
+4. \_\_clone()方法复制出来的新对象是一个指向原对象的引用。也就是说，更改了原对象的属性值，副本对象也会同时改变值。如果不希望这样，可以显式地在\_\_clone()方法中复制指定的对象。例子：
+```php
+function __clone() {
+	$this->account = clone $this->account;
+}
+```
+5. 可以通过对象属性保存另一个对象。
+
+### 定义对象的字符串值
+
+1. PHP5中引入的另一个受JAVA启发的功能是_toString()方法。在PHP5.2*之前*可以直接打印对象，PHP会把对象解析成一个字符串来输出。
+
+2. 从PHP5.2开始(以及之后)，直接打印一个对象会报错。例子：
+```php
+class StringThing {}
+$st = new StringThing();
+print $st;
+// 报错：
+// Catchable fatal error: Object of class StringThing could not be converted to string in D:\Wamp64\www\oop\11.php on  line 4
+```
+
+3. 当把一个对象传递给print或者echo时，会自动调用\_\_toString()方法，返回一个字符串。我们可以通过此方法控制字符串输出的格式。例子：
+```php
+class Person {
+	function getName() {return "Bob";}
+	function getAge() {return 44;}
+	function __toString() {
+		$desc = $this->getName();
+		$desc .= " (age ".$this->getAge().")";
+		return $desc;
+	}
+}
+
+$person = new Person();
+print $person;
+```
+
+4. >对于日志和错误报告，\_\_toString()方法非常有用，\_\_toString()方法也可以用于设计专门用来传递信息的类，比如Exception类可以把关于异常数据的总结信息写道\_\_toString()方法中。
+
+### 回调、匿名函数和闭包
+
+1. 
