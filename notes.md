@@ -865,3 +865,34 @@ print $person;
 3. 匿名函数中的use关键字，查看[这里](https://blog.csdn.net/qq_25600055/article/details/78879816)。
 
 4. **回调函数的关键是匿名函数？**
+
+5. 把一个函数作为参数来使用，调用其中的方法，并传入需要的属性。
+
+6. 回调。例子：
+```php
+//回调
+function study($who) {
+	echo $who ."is studying...";
+}
+
+function eat($who) {
+	echo $who ."is eating...";
+}
+
+function sing($who) {
+	echo $who ."is singing...";
+}
+// 创建匿名函数。
+$do = function ($funcName,$args) {
+	// return $funcName($args);
+	// call_user_func($funcName,$args);
+	call_user_func_array($funcName, [$args]);
+};
+$do('eat','小明');
+if (is_callable($do)) {
+	echo 'is callable!';
+}else{
+	echo 'cant callable';
+}
+```
+7. 好难理解。我可以把一个别人维护的方法拿来用，并可以改造这个方法，同时不改变他人维护的代码？
