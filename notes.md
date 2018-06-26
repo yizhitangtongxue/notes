@@ -899,3 +899,110 @@ if (is_callable($do)) {
 
 ## 对象工具
 
+### 命名空间
+
+1. 包是一组相关类的集合，这些类以某种方式组合在一起。包可以把系统的一部分和其他部分分隔开来。
+
+2. 命名空间可以解决命名冲突的问题。从本质上来说，命名空间就是一个容器，可以将类、函数和变量放在其中。
+
+3. use关键字，可以为当前命名空间下的其他命名空间起别名。例子：
+```php
+namespace com\getinstance\util;
+
+class Debug {
+	static function helloWorld() {
+		print "hello from Debug\n";
+	}
+}
+
+namespace main;
+// 可以导入com\getinstance\util命名空间，并隐式地为其使用了别名util。
+use com\getinstance\util;
+// 也可以导入Debug类本身。
+// use com\getinstance\util\Debug;
+
+util\Debug::helloWorld();
+```
+4. 当前命名空间下如果存在同名类，可以使导入的类**显式的使用别名**。
+```php
+namespace com\getinstance\util;
+
+class Debug {
+	static function helloWorld() {
+		print "hello from Debug\n";
+	}
+}
+
+
+namespace main;
+
+// 导入类并显式的为它指定一个别名uDebug
+// 这样就不会冲突了
+// 也可以隐式的使用命名空间的别名，不过需要在类的前面也加上命名空间
+use com\getinstance\util\Debug as uDebug;
+
+class Debug {
+	static function helloWorld() {
+	print "hello from main\Debug\n";
+	}
+}
+
+
+uDebug::helloWorld();
+```
+
+5. 如果你想在命名空间中，编写或访问保存在全局(非命名空间的)空间中的代码，那么可以在该名称(比如类、方法等)**前加反斜杠**。例子：
+```php
+// 在global.php中。无命名空间中，也就是全局空间中。
+class Lister {
+	public static function helloWorld() {
+		print "hello from global";
+	}
+}
+// 在namespace.php中。有命名空间com\getinstance\util。
+namespace com\getinstance\util;
+// 导入global.php文件。
+require_once 'global.php';
+// 在com\getinstance\util命名空间下，也有一个和全局空间一样的类与方法。
+class Lister {
+	public static function helloWorld() {
+		print "hello from ".__NAMESPACE__;
+	}
+}
+// 如果想在com\getinstance\util命名空间下访问全局空间的方法，只需要在该名称前加个反斜杠就可以了。
+\Lister::helloWorld(); // 输出hello from global，说明本方法来自于全局空间
+Lister::helloWorld(); // 输出hello from com\getinstance\util，说明本方法来自于命名空间
+```
+
+6. \_\_NAMESPACE\_\_常量可以输出当前的命名空间，在调试时很有用。
+
+7. 使用命名空间关键字(namespace)加大括号的方式，可以在同一文件中申明多个命名空间。
+
+8. 使用命名空间关键字(namespace)只加大括号的方式，可以申明全局空间。例子：
+```php
+// 全局空间
+namespace {
+	class Lister {
+		public static function helloWorld() {
+			print "hello from global<br/>";
+		}
+	}
+	use main\Lister as uLister; // 导入命名空间main中的Lister类，因为与本空间Lister类重名，所以使用as关键字给main命名空间中的Lister类设置了一个别名uLister
+	uLister::helloWorld();	// 输出hello from main，说明该代码来自命名空间main
+}
+// 命名空间main
+namespace main {
+	class Lister {
+		public static function helloWorld() {
+			print "hello from ".__NAMESPACE__."<br/>";
+		}
+	}
+	Lister::helloWorld(); // 输出hello from main，说明该代码来自命名空间main
+	\Lister::helloWorld(); // 输出hello from global，说明该代码来自全局空间
+
+}
+```
+
+9. 通常认为每个文件定义一个命名空间是最好的做法。
+
+### 用文件系统模拟包
