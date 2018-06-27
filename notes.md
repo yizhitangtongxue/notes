@@ -899,7 +899,7 @@ if (is_callable($do)) {
 
 ## 对象工具
 
-### 命名空间
+### 命名空间解决命名冲突等问题
 
 1. 包是一组相关类的集合，这些类以某种方式组合在一起。包可以把系统的一部分和其他部分分隔开来。
 
@@ -1005,4 +1005,127 @@ namespace main {
 
 9. 通常认为每个文件定义一个命名空间是最好的做法。
 
-### 用文件系统模拟包
+### 用文件系统模拟包解决命名冲突等问题
+
+1. 使用require()调用文件发生错误时，将会停止整个程序。
+
+2. 调用include()遇到相同的错误时，则会生成警告并停止执行包含文件，跳出调用代码然后继续执行。
+
+3. require()和require_once()用于包含库文件时更安全，而include()和include_once()则适用于加载模板这样的操作。
+
+4. require_once()包含可以防止类和方法重新定义。而使用require()或者include()则无法避免。
+
+5. require()和require_once()比其他两个语句更好更安全。因为遇到错误会报错并停止脚本。require_once()需要额外的开销。
+
+6. 它们都接收文件路径作为参数。
+
+### PEAR风格的命名方式解决命名冲突等问题
+
+1. PEAR PHP Extension and Application Repository，PHP扩展和应用程序库。是PHP官方维护的软件包集合，也是增强PHP功能的工具。
+
+2. pear.php.net可以找到各种PEAR包。
+
+3. PEAR使用文件系统来定义包。然后每个类都根据包路径来命名，每个路径都以下划线来分隔。例子：
+```php
+// PEAR下有一个XML包，XML包有一个子包RPC,RPC子包下有一个Server.php，在这个文件中定义的类不直接叫Server，而叫
+class XML_RPC_Server {
+
+}
+```
+
+### 包含路径解决命名冲突等问题
+
+1. include_path
+
+2. set_include_path
+
+3. get_include_path
+
+## 自动加载
+
+0. **自动加载适用于：希望一个文件定义一个类，一一对应，便于管理。这种方法会有额外的开销，但是这种组织方法非常有用，特别是系统需要在运行时使用新类的情况下。**
+
+1. \_\_autoload()拦截器可以自动包含类文件，将类名作为字符串参数传递给它，使用require等语句包含文件即可。例子：
+```php
+function __autoload($className) {
+	require_once("$className.php")
+}
+```
+
+2. 当PHP引擎试图实例化未知类时，会调用\_\_autoload()方法。如果\_\_autoload()方法已经被定义了的话。
+
+3. DIRECTORY_SEPARATOR是/字符，也就是目录分割字符。
+
+4. **\_\_autoload()方法是一种根据类和文件的结构，管理类库文件包含的有效方法。**
+
+5. *很多框架都用到了自动加载的技术，我还不是很懂，但是觉得自动加载应该很好玩*。
+
+## 类函数和对象函数
+
+1. 使用字符串来动态地引用类。例子：
+```php
+// Task.php
+namespace tasks;
+
+class Task {
+	function doSpeak() {
+		print "hello\n";
+	}
+}
+
+// TaskRunner.php
+// 定义类名
+$className = "Task";
+// 包含一次类文件
+require_once("{$className}.php");
+// \\的意思是转义。即一个\的意思。由于\在双引号中比较特殊。
+// 同时也构造了一个命名空间限定条件。
+$className = "tasks\\{$className}";
+$myObj = new $className();
+$myObj->doSpeak();
+```
+
+### 查找类
+
+1. class_exists()函数接收表示类的字符串，检查并返回布尔值。如果类存在则返回true，反之false。例子：
+```php
+// Task.php
+namespace tasks;
+
+class Task {
+	function doSpeak() {
+		print "hello\n";
+	}
+}
+
+// 对之前的代码进行改造，使之更安全
+// TaskRunner.php
+// 定义类名
+$className = "Task";
+// 定义要包含的类文件
+$pathName = "{$classN1ame}.php";
+// 检查包含的文件是否存在
+if (!file_exists($pathName)) {
+	throw new Exception("No such file as {$pathName}");
+}
+// 包含文件
+require_once($pathName);
+
+// 定义类名，同时构造命名限制空间
+$qclassName = "tasks\\$className";
+// 检查类是否存在
+if(!class_exists($qclassName)) {
+	throw new Exception("No such class as $qclassName");
+}
+	$myObj = new $qclassName();
+	$myObj->doSpeak();	
+```
+
+2. 简而言之，class_exists()函数可以检查类是否存在。
+
+3. 列出用户定义的类和PHP内置的类。例子：
+```php
+print_r(get_declared_classes());
+```
+
+### 了解对象或者类
