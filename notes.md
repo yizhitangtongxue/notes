@@ -1129,3 +1129,193 @@ print_r(get_declared_classes());
 ```
 
 ### 了解对象或者类
+
+1. get_class($object)。以字符串的形式返回对象所属的类名。例子：
+```php
+class A {
+	function sayHello() {
+		print 'Hello';
+	}
+}
+
+echo get_class(new A());
+```
+
+2. instanceof检测对象是否属于某类。例子：
+```php
+class A {
+	function sayHello() {
+		print 'Hello';
+	}
+}
+
+if(new A() instanceof A) {
+	print "属于";
+}
+```
+
+### 了解类中的方法
+
+1. get_class_methods()得到一个类(或者对象)中的所有方法的列表，返回一个数组。例子：
+```php
+class A {
+	function sayHello() {
+		print 'Hello';
+	}
+	function sayHi() {
+
+	}
+}
+
+print_r(get_class_methods('A'));
+```
+
+2. 检测方法名是否存在于对象中。例子1：
+```php
+class A {
+	function sayHello() {
+		print 'Hello';
+	}
+	private function sayHi() {
+
+	}
+	protected function Six() {
+
+	}
+}
+// 以字符串变量的形式给出方法名，然后通过对象动态的调用类方法
+$methodName_str = "sayHello";
+
+$a = new A();
+
+if(in_array($methodName_str,get_class_methods('A'))) {
+	print $a->$methodName_str();
+}
+```
+
+3. 检测方法名是否存在于对象中。例子2：
+```php
+class A {
+	function sayHello() {
+		print 'Hello';
+	}
+	private function sayHi() {
+
+	}
+	protected function Six() {
+
+	}
+}
+$methodName_str = "sayHello";
+
+$a = new A();
+// 给is_callable传递一个数组，数组中包含对象和方法名
+// 可以检测该方法是否存在于对象中
+if (is_callable(array($a,$methodName_str))) {
+	print $a->$methodName_str();
+}
+
+```
+
+3. 检测方法名是否存在于对象中。例子3：
+```php
+class A {
+	function sayHello() {
+		print 'Hello';
+	}
+	private function sayHi() {
+
+	}
+	protected function Six() {
+
+	}
+}
+$methodName_str = "sayHello";
+
+$a = new A();
+
+// 用method_exists应该更好理解
+if(method_exists($a,$methodName_str)) {
+	print $a->$methodName_str();
+}
+```
+
+4. 一般的，要检测方法是否属于某对象或者类，要检测的对象处于左边。例子：
+```php
+is_callable(array($obj,$methodName_str));
+method_exists($obj, $methodName_str);
+```
+
+### 了解类属性
+
+1. get_class_vars()函数可以查询类中的属性。例子：
+```php
+class A {
+	public $name = 'xiaoming';
+	public $age = 13;
+	private $sex = 'nan';
+	protected $school = 'hzvtc';
+}
+
+print_r(get_class_vars('A'));
+
+// Array
+// (
+//     [name] => xiaoming
+//     [age] => 13
+// )
+```
+
+### 了解继承
+
+1. get_parent_class()这个函数需要一个类名或者对象名作为参数，如果父类存在，就返回父类的名称。如果检测的类不存在父类，则返回false。例子：
+```php
+class A {
+	function sayHello() {
+		print 'Hello';
+	}
+}
+
+class B extends A {
+
+}
+
+var_dump(get_parent_class('B'));
+// D:\Wamp64\www\oop\get_parent_class.php:12:string 'A' (length=1)
+// 同样的，也可以使用is_subclass_of()检测类是否是另一个类的子类(派生类),如果是的话返回true
+var_dump(is_subclass_of(new B(), 'A'));
+
+var_dump(get_class_methods('B'));
+// D:\Wamp64\www\oop\get_parent_class.php:17:
+// array (size=1)
+//   0 => string 'sayHello' (length=8)
+```
+
+### 反射API
+
+1. 反射API有一系列可以分析属性、方法和类的内置类组成。
+
+2. ReflectionClass可以提供给定类的所有信息，需要实例化ReflectionClass()方法，并接收类名作为唯一参数。例子：
+```php 
+class A {
+	public $age = 11;
+	private $name = 'xiaoming';
+	function A() {
+		return 'A';
+	}
+	public function B() {
+		return 'B';
+	}
+	function sayHello() {
+		return 'helloworld';
+	}
+}
+$prod_class = new ReflectionClass('A');
+Reflection::export($prod_class);
+```
+
+## 第六章-对象与设计
+
+0. 越来越复杂了，考虑开始看一些例子来做了。先丢一段时间，等有空了再捡起来看看。
+
+1. ...
